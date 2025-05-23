@@ -42,4 +42,17 @@ app.get("/keepa", async (req, res) => {
 
     if (!data || !data.products || !data.products.length) {
       console.log("Brak danych z Keepa!");
-      return res.status(404).j
+      return res.status(404).json({ error: "Brak danych z Keepa", data });
+    }
+
+    res.json(data);
+  } catch (e) {
+    console.log("❌ Błąd podczas pobierania danych z Keepa:", e);
+    res.status(500).json({ error: "Błąd pobierania danych z Keepa", details: String(e) });
+  }
+});
+
+// Startujemy serwer
+app.listen(PORT, () => {
+  console.log(`✅ Serwer słucha na porcie ${PORT}`);
+});
