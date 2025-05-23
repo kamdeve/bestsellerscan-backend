@@ -1,7 +1,6 @@
-// index.js
-const express = require('express');
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-const cors = require('cors');
+import express from 'express';
+import fetch from 'node-fetch';
+import cors from 'cors';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -10,26 +9,27 @@ app.use(cors());
 
 app.get('/keepa', async (req, res) => {
   const { asin } = req.query;
-  const KEEPPA_KEY = process.env.KEEPA_KEY || 'TWÓJ_KEEPA_API_KEY';
+  if (!asin) return res.status(400).json({ error: 'No ASIN' });
 
-  if (!asin || !KEEPPA_KEY) {
-    return res.status(400).json({ error: 'Missing asin or Keepa API key' });
-  }
-
-  try {
-    const url = `https://api.keepa.com/product?key=${KEEPPA_KEY}&domain=1&asin=${asin}&history=1&buybox=1&offers=0&stats=0&buybox=1`;
-    const response = await fetch(url);
-    const data = await response.json();
-    res.json(data);
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch data from Keepa', details: err.toString() });
-  }
+  // Tu przykładowa odpowiedź
+  res.json({
+    products: [
+      {
+        csv: [
+          [], // Placeholder (index 0)
+          [], // Placeholder (index 1, price)
+          [], // Placeholder (index 2)
+          []  // Placeholder (index 3, bsr)
+        ]
+      }
+    ]
+  });
 });
 
 app.get('/', (req, res) => {
-  res.send('Keepa Proxy API works!');
+  res.send('BestsellerScan backend API');
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server listening on port ${PORT}`);
 });
